@@ -16,6 +16,8 @@ module Rudy
     field :position
     field :user
     field :pkey
+
+    field :localhost
     
     field :nocolor
     field :quiet
@@ -56,7 +58,7 @@ module Rudy
       if config.defaults?
         # Apply the "color" default before "nocolor" so nocolor has presedence
         @nocolor = !config.defaults.color unless config.defaults.color.nil?
-        %w[region zone environment role position user nocolor quiet yes].each do |name|
+        %w[region zone environment role position user nocolor quiet yes localhost].each do |name|
           val = config.defaults.send(name)
           self.send("#{name}=", val) unless val.nil?
         end
@@ -121,6 +123,7 @@ module Rudy
       @role ||= Rudy::DEFAULT_ROLE
       @position ||= Rudy::DEFAULT_POSITION
       @user ||= Rudy::DEFAULT_USER
+      @localhost ||= Rudy::DEFAULT_LOCALHOST
     end
     
   end

@@ -272,7 +272,7 @@ module Rudy
   class Machines::Offline
     def list(more=[], less=[], &each_mach)
       m = Rudy::Machine.new
-      m.dns_public = 'localhost'
+      m.dns_public = @@global.localhost  # 'localhost'
       each_mach.call(m) if each_mach
       [m]
     end

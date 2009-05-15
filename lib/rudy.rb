@@ -60,6 +60,8 @@ module Rudy
     DEFAULT_POSITION = '01'.freeze
     
     DEFAULT_USER = 'rudy'.freeze
+
+    DEFAULT_LOCALHOST = 'localhost'.freeze
     
     DEFAULT_EC2_HOST = "ec2.amazonaws.com"
     DEFAULT_EC2_PORT = 443

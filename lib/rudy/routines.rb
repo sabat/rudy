@@ -73,8 +73,7 @@ module Rudy
           execute_dependency(before_dependencies, skip_check, skip_header)
         }
         
-        
-        lbox = Rye::Box.new('localhost')
+        lbox = Rye::Box.new( @@global.localhost )
         sconf = fetch_script_config
         
         enjoy_every_sandwich {
