@@ -36,8 +36,9 @@ module Rudy
     
     def liner_note
       update #if !dns_public? && @awsid
-      info = !@dns_public.nil? && !@dns_public.empty? ? @dns_public : "#{@awsid}:#{@state}"
-      "%s  %s" % [self.name.bright, info]
+      public_dns_info = !@dns_public.nil? && !@dns_public.empty? ? @dns_public : "#{@awsid}:#{@state}"
+      private_dns_info = !@dns_private.nil? && !@dns_private.empty? ? @dns_private : ""
+      "%s  %s %s" % [self.name.bright, public_dns_info, private_dns_info]
     end
     
     def to_s(with_title=false)
