@@ -167,6 +167,10 @@ module Rudy
       "g-#{current_machine_group}"
     end
     
+    def starting_position
+      fetch_machine_param(:starting_position)
+    end
+    
     def current_machine_count
       fetch_machine_param(:positions) || 1
     end
@@ -182,6 +186,10 @@ module Rudy
       hn = fetch_machine_param(:hostname) || :rudy
       hn = hn.flatten.compact.first if hn.is_a?(Array)
       hn
+    end
+
+    def current_machine_host_nickname_pattern
+      (fetch_machine_param(:host_nickname_pattern) || "").clone
     end
     
     def current_machine_image

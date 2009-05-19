@@ -98,7 +98,7 @@ module Rudy
         rmach.send(machine_action) do |machine|
           machines << machine
           
-          puts machine_separator(machine.name, machine.awsid) unless skip_header
+          puts machine_separator(machine.nickname || machine.name, machine.awsid) unless skip_header
           
           unless skip_check
             msg = preliminary_separator("Checking if instance is running...")
@@ -142,7 +142,7 @@ module Rudy
               hn = current_machine_hostname || :rudy
               if hn != :default
                 hn = machine.name if hn == :rudy
-                print preliminary_separator("Setting hostame to #{hn}... ")
+                print preliminary_separator("Setting hostname to #{hn}... ")
                 rbox.hostname(hn) 
                 puts "done"
               end

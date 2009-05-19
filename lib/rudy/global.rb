@@ -100,7 +100,7 @@ module Rudy
       @nocolor = !@color unless @color.nil?
       @cert &&= File.expand_path(@cert)
       @privatekey &&= File.expand_path(@privatekey)
-      @position &&= @position.to_s.rjust(2, '0')  
+      @position &&= @position.to_s.rjust(2, '0') # SABAT hmmmmm
       @format &&= @format.to_sym rescue nil
       @quiet ? Rudy.enable_quiet : Rudy.disable_quiet
       @yes ? Rudy.enable_yes : Rudy.disable_yes

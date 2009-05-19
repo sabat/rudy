@@ -30,7 +30,7 @@ module Rudy
       @zone = @@global.zone
       @environment = @@global.environment
       @role = @@global.role
-      @position = find_next_position || '01'
+      @position = find_next_position
       @state = 'no-instance'
     end
     
@@ -38,7 +38,13 @@ module Rudy
       update #if !dns_public? && @awsid
       public_dns_info = !@dns_public.nil? && !@dns_public.empty? ? @dns_public : "#{@awsid}:#{@state}"
       private_dns_info = !@dns_private.nil? && !@dns_private.empty? ? @dns_private : ""
-      "%s  %s %s" % [self.name.bright, public_dns_info, private_dns_info]
+      keyname = get_instance.keyname
+      if self.name == self.nickname
+        "%s  %s %s %s" % [self.name.bright, public_dns_info, private_dns_info, self.awsid]
+      else
+        "%s %s %s %s %s" % [self.nickname, public_dns_info, private_dns_info, self.awsid, keyname ]
+      end
+      # "%s  %s %s" % [self.name.bright, public_dns_info, private_dns_info]
     end
     
     def to_s(with_title=false)
@@ -66,8 +72,12 @@ module Rudy
       
     def find_next_position
       list = @sdb.select(self.to_select(nil, [:position])) || []
-      pos = list.size + 1
-      pos.to_s.rjust(2, '0')
+      if list.empty?
+        starting_position || '01'
+      else
+        pos = list.size + (starting_position || 1)
+        pos.to_s.rjust(2, '0')
+      end
     end
     
     def name
@@ -78,7 +88,23 @@ module Rudy
       pos = pos.to_s.rjust 2, '0'
       ["m", zon, env, rol, pos].join(Rudy::DELIM)
     end
-    
+
+    def nickname
+      Machine.generate_nickname(@zone, @environment, @role, @position, current_machine_host_nickname_pattern)
+    end
+
+    def Machine.generate_nickname(zon, env, rol, pos, pat)
+      m = { 'zone' => zon, 'environment' => env, 'role' => rol, 'position' => pos.to_s.sub(/^0/,""), 'position_justified' => pos.to_s.rjust(2,'0') }
+      if !(pat.nil? || pat.empty?)
+        hn = pat.clone
+        while hn.match(/\[(.+?)\]/)
+          k = $1
+          hn.gsub!("[#{k}]", (m[k] || "").to_s)     # instance_variable_get("@#{k}").to_s)
+        end
+      end
+      hn
+    end
+
     def get_instance
       @ec2inst.get(@awsid)
     end
